@@ -1,8 +1,10 @@
 # DormMate
 
+## Overview
+
 DormMate is a smart embedded dorm assistant designed to help college students improve time management, reduce missed classes, and stay organized.
 
-The system combines alarms, reminders, class scheduling, and future attendance-aware features into one embedded productivity system.
+The system combines alarms, reminders, scheduling tools, and future attendance-aware features into one embedded productivity system. DormMate is being developed progressively through multiple firmware versions to simulate real engineering iteration and embedded system development.
 
 ---
 
@@ -13,133 +15,296 @@ Many college students struggle with:
 - Missing classes
 - Oversleeping
 - Poor time management
-- Forgetting routines
-- Feeling overwhelmed by schedules
+- Forgetting assignments and routines
+- Feeling overwhelmed by busy schedules
 
-DormMate aims to reduce these problems through intelligent reminders and embedded system automation.
+DormMate aims to reduce these problems through intelligent reminders, scheduling assistance, and embedded system automation.
 
 ---
 
 ## Current Features
 
+### Core Features
+
 - Virtual Clock System
+- Automatic Night Light (Photoresistor-Based)
 - Alarm System
 - Reminder System
-- LCD Menu Navigation
+- LCD User Interface
 - IR Remote Navigation
-- Class Scheduling (V1)
+- 12-Hour / 24-Hour Time Mode
 
-### Class Scheduling Features
+### Academic Productivity Features
 
-- Meeting day selection (MWF / TR)
-- Class time setup
-- Enable / Disable schedule logic
+- Class Scheduling System
+- Meeting Day Selection (MWF / TR)
+- Class Time Configuration
+- Enable / Disable Schedule Logic
+- Multi-Reminder Scheduling
+
+### User Interface Features
+
+- Interactive LCD Menu Navigation
+- Arrow-Based Menu Selection
+- Screen State Navigation
+- Dynamic Reminder Notifications
 
 ---
 
-## In Progress
+## Firmware Evolution
 
-- Next Class Logic
-- Smart Class Reminder System
-- Door Exit Detection Logic
+### V1 — Initial Prototype
+**Completed:** May 8, 2026
+
+**Features:**
+- Timer system
+- Photoresistor-based night light
 
 ---
 
-## Planned Features
+### V2
+**Completed:** May 13, 2026
 
-- ESP32 Migration
-- Phone Notifications
-- Mobile App Integration
-- PCB Version
-- Student Testing
+**Features:**
+- LCD interface
+- IR remote navigation
+- Menu system
+- Sensor monitoring
+
+---
+
+### V3
+**Completed:** May 15, 2026
+
+**Features:**
+- Improved menu navigation
+- Arrow-based UI system
+- Better screen interaction
+
+---
+
+### V4
+**Completed:** May 18, 2026
+
+**Features:**
+- 12-hour / 24-hour clock mode
+- Improved time display system
+
+---
+
+### V5
+**Completed:** May 19, 2026
+
+**Features:**
+- Alarm system
+- Piezo buzzer integration
+
+---
+
+### V6
+**Completed:** May 19, 2026
+
+**Features:**
+- Melody-based alarm
+- Alarm screen
+- Improved alarm control logic
+
+---
+
+### V6.1
+**Completed:** May 19, 2026
+
+**Features:**
+- Alarm refinements
+- Bug fixes
+- System tuning
+
+---
+
+### V7
+**Completed:** May 20, 2026
+
+**Features:**
+- Reminder system
+- Scheduled reminder notifications
+
+---
+
+### V8
+**Completed:** May 22, 2026
+
+**Features:**
+- Multi-reminder scheduling
+- Dynamic reminder tracking
+
+---
+
+### V9
+**Completed:** May 22, 2026
+
+**Features:**
+- Class schedule manager
+- Course navigation system
+
+---
+
+### V10 — Current Version
+**Completed:** May 25, 2026
+
+**Features:**
+- Editable class schedules
+- Meeting day selection
+- Course enable / disable logic
+- Academic planner system
+
+---
+
+## Engineering Challenges & Solutions
+
+### 1. Alarm Sound Conflict
+
+**Problem:**  
+The IR remote library conflicted with Arduino's built-in `tone()` function because both relied on timer interrupts, preventing the buzzer from emitting sound.
+
+**Solution:**  
+A custom `playTone()` function was developed to manually generate sound frequencies. During debugging, an additional issue was discovered where the speaker pin had not been initialized as an output inside `setup()`.
+
+**Skills Demonstrated:**
+- Embedded debugging
+- Interrupt conflict troubleshooting
+- Hardware/software integration
+
+---
+
+### 2. Alarm Screen Would Not Exit
+
+**Problem:**  
+The alarm repeatedly retriggered because the condition:
+
+`H == alarmHour && M == alarmMinute`
+
+remained true for an entire minute, causing behavior similar to a constant interrupt.
+
+**Solution:**  
+An `alarmTriggered` flag was implemented so the alarm activates only once and resets after the minute changes. Remote button logic was added to stop the alarm and return to the main screen.
+
+**Skills Demonstrated:**
+- Event-driven programming
+- State-machine logic
+- Embedded debugging
+
+---
+
+### 3. Reminder Display Duplication Bug
+
+**Problem:**  
+Stopping reminders caused duplicated reminder text on the LCD display.
+
+**Solution:**  
+A dedicated `currentReminder` variable was introduced to dynamically track the active reminder rather than reusing menu navigation variables.
+
+**Skills Demonstrated:**
+- LCD debugging
+- Variable management
+- Embedded UI logic
+
+---
+
+### 4. Shared Input Conflict
+
+**Problem:**  
+Remote buttons conflicted because the same button was assigned to multiple functions across different system states.
+
+**Solution:**  
+Input assignments were redesigned to separate alarm control and class scheduling interactions.
+
+**Skills Demonstrated:**
+- Input management
+- Embedded system integration
+- Logic debugging
+
+---
+
+### 5. Hardware Grounding Failure
+
+**Problem:**  
+During testing, the LCD stopped displaying text while the buzzer emitted continuous noise.
+
+**Solution:**  
+The issue was diagnosed as a disconnected ground wire and resolved through circuit troubleshooting.
+
+**Skills Demonstrated:**
+- Circuit debugging
+- Hardware diagnostics
+- Wiring verification
 
 ---
 
 ## Hardware Used
 
+### Current Hardware
+
 - Arduino Uno
-- 16x2 LCD
+- 16x2 LCD Display
 - IR Receiver + Remote
-- Buzzer
-- LDR Sensor
-- Ultrasonic Sensors (planned)
-- ESP32 (future)
+- Piezo Buzzer
+- Photoresistor (LDR)
+- Breadboard
+- Potentiometer
+- Yellow LED
+- 220Ω Resistors
+- 10kΩ Resistor
+
+### Planned Hardware
+
+- HC-SR04 Ultrasonic Sensors
+- ESP32 Microcontroller
+- Custom PCB
 
 ---
 
-## Development Status
-## Development Timeline
+## Future Improvements
 
-Project development began before GitHub documentation started.
-Versions were uploaded later to GitHub for organization and version tracking.
+### Smart Attendance Features
 
-### V1 — Initial Prototype
-Completed: May 8, 2026
-Features:
-- Timer system
-- Photoresistor night light
+- Dorm exit detection using dual ultrasonic sensors
+- Detect if student left for class on time
+- Alarm intensification if student remains in dorm
 
-### V2
-Completed: May 13, 2026
-Features:
-- LCD interface
-- IR remote navigation
-- Menu system
-- Sensor display
+### Connectivity Features
 
-### V3
-Completed: May 15, 2026
-Features:
-- Interactive menu navigation
-- Improved UI
+- ESP32 migration
+- Wi-Fi integration
+- Mobile app communication
+- Phone notifications
 
-### V4
-Completed: May 18, 2026
-Features:
-- 12-hour / 24-hour clock mode
+### Product Development
 
-### V5
-Completed: May 19, 2026
-Features:
-- Alarm system
-- Buzzer integration
+- PCB version
+- Student testing
+- Improved enclosure design
 
-### V6
-Completed: May 19, 2026
-Features:
-- Melody alarm
-- Alarm screen
-- Improved alarm control
+---
 
-### V6.1
-Completed: May 19, 2026
-Features:
-- Alarm refinements
-- System tuning
+## Skills Demonstrated
 
-### V7
-Completed: May 20, 2026
-Features:
-- Reminder system
+- Embedded Systems Programming
+- C/C++ Development
+- LCD Interface Programming
+- IR Remote Communication
+- State Machine Design
+- Event-Driven Programming
+- Embedded Debugging
+- Hardware Troubleshooting
+- Sensor Integration
+- Alarm and Scheduling Logic
+- Firmware Iteration
+- Embedded UI Development
 
-### V8
-Completed: May 22, 2026
-Features:
-- Multi-reminder scheduling
+---
 
-### V9
-Completed: May 22, 2026
-Features:
-- Class schedule manager
+## Active Development
 
-### V10 — Current Version
-Completed: May 25, 2026
-Features:
-- Editable class scheduling
-- Meeting day selection
-- Course enable/disable system
+**Project Started:** May 2026
 
-
-Active Development
-
-Started: May 2026
+GitHub documentation was added after development began to organize firmware versions and engineering progress.
