@@ -171,8 +171,7 @@ DormMate aims to reduce these problems through intelligent reminders, scheduling
 * Class enable / disable controls
 * Improved academic planner behavior
 ---
-### V12 — Next Class Logic System (Current version)
-
+### V12 — Next Class Logic System 
 **Completed:** May 30, 2026
 
 **Features:**
@@ -184,6 +183,16 @@ DormMate aims to reduce these problems through intelligent reminders, scheduling
 * Reminder integration into clock screen
 * Automatic future-class filtering
 * Smart class reminder display
+
+### V13 — Smart Reminder Escalation (Current version)
+**Completed:** June 1, 2026
+
+**Features:**
+- Multi-level class reminder system
+- 30-minute class notifications
+- 15-minute priority notifications
+- 5-minute urgent notifications
+- One-time reminder trigger protection
 
 
 ## Engineering Challenges & Solutions
