@@ -1,3 +1,24 @@
+/*
+==========================================
+DormMate V13 Prototype
+
+Subsystems:
+- Clock System
+- Alarm System
+- Reminder System
+- Academic Planner
+- Class Scheduler
+- Next Class Engine
+- Smart Reminder Escalation
+
+Current Version:
+V13 Prototype
+
+Next Milestone:
+RTC Integration
+==========================================
+*/
+
 #include <LiquidCrystal.h>
 #include <AlashIRControlRX.h>
 
@@ -59,8 +80,8 @@ bool reminderTriggered = false;
 bool reminderRinging = false;
 
 // reminder menu navigation
-int r = 0;
-int c = 1;
+int r = 0; // Reminder top row
+int c = 1;// reminder Bottom row
 
 String Reminderd[] =
 {
@@ -92,6 +113,8 @@ String messages[] = {
   "Future Engineer!",
   "Never Give Up!"
 };
+/* Menu variables
+array has all the items displayed in the menu  */
 String menud[]={
   "Time",//0
   "Sensor value",//1
@@ -103,8 +126,8 @@ String menud[]={
   "CLASS SCHEDULE",//7
   "SetWeekDay",//8
 };
-int x=0 ;
-int y=1;
+int x=0 ;// menu navigation upper 
+int y=1; // menu navigation lower
 //control arrow
 int selectedRow = 0;
 /*Screen 0 = menu
@@ -159,7 +182,8 @@ bool physEnabled = false;
 bool calcEnabled = false;
 bool assemblyEnabled = false;
 bool staticEnabled = false ;
-
+/*MWF = Monday, wednesday, friday 
+  TT  = Tuesday, Thursday       */ 
 String calcDays[] =
 {
    "MWF",
@@ -216,19 +240,35 @@ void setup()
 
 void loop()
 {
+    // -------- CORE SYSTEMS --------
+    autoLight();
+    VirtualTimeCount();
+    alarmCheck();
+    RemoteControl();
 
-  //------ LIGHT------------
-  autoLight();
+    // -------- SCREENS --------
+    screenManager();
 
-  // -------- CLOCK --------
-  VirtualTimeCount();
-  //-------- ALARM CHECK ------
-  alarmCheck();
+    // -------- REMINDERS --------
+    Remindercheck();
 
-  // -------- IR REMOTE --------
-  RemoteControl();
-    // -------- SCREEN 0 -------
+    // -------- SMART LOGIC --------
+    NextClass();
+
+    delay(200);
+}
+
+
+
+/*=======================================================
+-SCREEN MANAGER
+- Contains all screens displayed by DormMate
+=======================================================*/
+void screenManager()
+{
+    // -------- SCREEN 0 --------
     menu();
+
     // -------- SCREEN 1 --------
     clock();
 
@@ -237,45 +277,52 @@ void loop()
 
     // -------- SCREEN 3 --------
     motivation();
+
     // -------- SCREEN 4 --------
     setTime();
-    //-------- SCREEN 5 -----------
-    timeMode() ;
-    //--------- SCREEN 6 ------------ 
+
+    // -------- SCREEN 5 --------
+    timeMode();
+
+    // -------- SCREEN 6 --------
     alarm();
-    //-------- SCREEN 7 -------------
+
+    // -------- SCREEN 7 --------
     alarmScreen();
-    Remindercheck();
-    //----SCREEN 8-------
+
+    // -------- SCREEN 8 --------
     Reminder();
-    //------SCREEN 10 ------
-    reminder0();
-    reminder1();
-    reminder2();
-    reminder3();
-    reminder4();
+
+    // -------- SCREEN 9 --------
     ReminderScreen();
 
-    //--- SCREEN 16 ------
+    // -------- SCREEN 10 --------
+    reminder0();
+
+    // -------- SCREEN 11 --------
+    reminder1();
+
+    // -------- SCREEN 12 --------
+    reminder2();
+
+    // -------- SCREEN 13 --------
+    reminder3();
+
+    // -------- SCREEN 14 --------
+    reminder4();
+
+    // -------- SCREEN 16 --------
     ScheduleMyClasses();
 
-    // --------- screen 17-----------
-    calc2();
-    // --------- screen 18 ----------
-    phys211();
-    //------------- screen 19 ----------
-    econ();
-    // -------- screen 20 -----------
-    assembly();
-    // ------------- screen 21 ------------
-    statics();
-    // ---------------- screen 22 -------------
-    setWeekDay();
-    //------------------------------
-    NextClass();
+     classesNames();// actual classes name
 
-  delay(200);
+    // -------- SCREEN 22 --------
+    setWeekDay();
 }
+/* ========================================================
+- AUTOLIGHT 
+- control wether light on or off
+============================================================ */
 void autoLight(){
     // -------- LIGHT SENSOR --------
   val = analogRead(LIGHT);
@@ -290,6 +337,11 @@ void autoLight(){
     digitalWrite(YLED, LOW);
   }
 }
+
+/* ========================================================
+- VirtualTimeCount 
+- Calculate the time using millis()
+============================================================ */
 void VirtualTimeCount(){
     // -------- CLOCK --------
     unsigned long currentTime = millis();
@@ -312,6 +364,10 @@ void VirtualTimeCount(){
   }
 }
 
+/* ========================================================
+- RemoteControl 
+- Contain hexadecimal values of used buttons and some unused
+============================================================ */
 void RemoteControl(){
   // -------- IR REMOTE --------
   if (irReceiver.check())
@@ -348,6 +404,13 @@ void RemoteControl(){
     }
   }
 }
+/* ========================================================
+- Menu screen  
+- Displays the items that are in the menu 
+- allow selection of items 
+- trasnfer the user from the Mneu screen (Screen = 0) to the selected Item screen
+============================================================ */
+
 void menu()
 {
     if(screen == 0)
@@ -477,6 +540,11 @@ void menu()
     }
 }
 
+/* ==========================================
+- CLOCK SCREEN
+- Displays current time and weekday
+- Screen 1
+ ==========================================*/
 void clock()
 {
     if(screen == 1)
@@ -556,7 +624,11 @@ void clock()
         }
     }
 }
-
+/* ========================================================
+- sensorvalue screen 
+- Display value of room light
+- screen 2
+============================================================ */
 void sensorvalue(){
     if (screen == 2)
   {
@@ -589,6 +661,11 @@ void motivation(){
   }
 }
 
+/* ========================================================
+- setTime screen 
+- Allows the user to set the time manually with remote 
+- screen 4
+============================================================ */
 void setTime(){
   if(screen == 4)
 {
@@ -661,7 +738,11 @@ void setTime(){
     }
 }
 }
-
+/* ========================================================
+- timeMode screen 
+- Allows the user to select the time mode 12h/24h with remote 
+- screen 5
+============================================================ */
 void timeMode(){
   if(screen == 5){
     lcd.clear();
@@ -707,7 +788,11 @@ void timeMode(){
 
   }
 }
-
+/* ========================================================
+- alarm screen 
+- Allows the user to set an alarm 
+- screen 6
+============================================================ */
 void alarm()
 {
     if(screen == 6)
@@ -799,6 +884,11 @@ void alarm()
         }
     }
 }
+/* ========================================================
+- alarm CHECK
+- Check if the alarm was triggered
+- emit the sound of the alarm
+============================================================ */
 void alarmCheck()
 {
     // -------- Trigger alarm ONCE --------
@@ -838,7 +928,11 @@ void alarmCheck()
         alarmTriggered = false;
     }
 }
+/* ========================================================
+- Play tone
+- playTone(f,d) allows the program to emit sound with buzzer. Because of interrupt issues, we cannot use tone()
 
+============================================================ */
 void playTone(int frequency, int duration)
 {
     long delayValue = 1000000 / frequency / 2;
@@ -853,7 +947,11 @@ void playTone(int frequency, int duration)
         delayMicroseconds(delayValue);
     }
 }
-
+/* ========================================================
+- alarm display screen 
+- Displays the alarm and give option to stop the alarm by pressing 1
+- screen 7
+============================================================ */
 void alarmScreen(){
   if(screen == 7){
   lcd.clear();
@@ -869,6 +967,12 @@ void alarmScreen(){
             screen = 1;// back to time
         }
 }
+
+/* ========================================================
+- Reminder screen 
+- Allows the user to select an item in the reminder menu screen
+- screen 8
+============================================================ */
 void Reminder()
 {
     if(screen == 8)
@@ -980,6 +1084,16 @@ void Reminder()
         }
     }
 }
+
+/* ========================================================
+- reminder0 to reminder4
+- Allows the user to set a reminder time for the reminder selected
+- screen 10 (reminder0)
+- screen 12 (reminder1)
+- screen 13 (reminder2)
+- screen 14 (reminder3)
+- screen 15 (reminder4)
+============================================================ */
 void reminder0()
 {
     if(rem0Open && screen == 10)
@@ -1498,7 +1612,11 @@ void reminder4()
     }
 }
 
-
+/*=================================================
+- ReminderCheck
+- Checks if an item's reminder time is equal to current time.
+- reminderEnabled has to be true
+================================================== */
 void Remindercheck()
 {
     if(reminderEnabled &&
@@ -1567,7 +1685,11 @@ void Remindercheck()
     }
     
 }
-
+/*=================================================
+- ReminderScreen
+- Displays the reminder to the screen
+- allows the user to exit the reminder screen by pressing 1
+================================================== */
 void ReminderScreen()
 {
     if(screen == 11)
@@ -1599,7 +1721,12 @@ void ReminderScreen()
         }
     }
 }
-
+/*=================================================
+- ScheduleMyClasses screen
+- Displays the classes the user has
+- Allows the user to select a class to modify the meeting days and time
+- Allows the user to specify what time those classes happen
+================================================== */
 void ScheduleMyClasses(){
   if(screen == 16){
     lcd.clear();
@@ -1703,7 +1830,18 @@ void ScheduleMyClasses(){
   }
 
 }
+/*=================================================
+- Classes screen
+- classes in the student schedule
+================================================== */
+void classesNames(){
+  calc2();      // screen 17
+  phys211();    // screen  18
+  econ();       // screen 19
+  assembly();   // screen 20
+  statics();    // screen 21
 
+}
 void calc2()
 {
     if(screen == 17)
@@ -2347,7 +2485,11 @@ void statics()
         }
     }
 }
-
+/*============================================================================
+- setWeekDay
+- Allows the user to select a day of the week
+- screen 22
+*/
 void setWeekDay()
 {
     if(screen == 22)
@@ -2394,7 +2536,10 @@ void setWeekDay()
         }
     }
 }
-
+/*===============================================================
+- NextClass
+- Determines what is the next class by calculations
+*/
 void NextClass()
 {
     int currentTime;
