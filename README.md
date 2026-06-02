@@ -194,6 +194,17 @@ DormMate aims to reduce these problems through intelligent reminders, scheduling
 - 5-minute urgent notifications
 - One-time reminder trigger protection
 
+**V13 Refinement Update**
+
+* Added screenManager() architecture
+* Added class name display system
+* Simplified main loop structure
+* Improved code organization
+* Improved code readability and maintainability
+* Prepared codebase for RTC integration
+
+
+
 
 ## Engineering Challenges & Solutions
 
@@ -293,9 +304,39 @@ The issue was diagnosed as a disconnected ground wire and resolved through circu
 
 ### Planned Hardware
 
-- HC-SR04 Ultrasonic Sensors
-- ESP32 Microcontroller
-- Custom PCB
+**Microcontroller**
+
+* ESP32 Microcontroller
+
+**Sensors**
+
+* HC-SR04 Ultrasonic Sensor(s)
+* Light Sensor
+
+**Timekeeping**
+
+* DS3231 RTC Module
+
+**Display**
+
+* ST7789 IPS TFT Display (Planned)
+
+**Audio**
+
+* Piezo Speaker
+
+**Connectivity**
+
+* Bluetooth Communication
+
+**Circuitry**
+
+* Custom PCB (Future Version)
+
+**Enclosure**
+
+* Wall-Mounted DormMate Enclosure
+
 
 ---
 
