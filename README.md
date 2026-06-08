@@ -203,6 +203,29 @@ DormMate aims to reduce these problems through intelligent reminders, scheduling
 * Improved code readability and maintainability
 * Prepared codebase for RTC integration
 
+### V14 — RTC Integration (In Development)
+
+**Started:** June 5 2026
+
+**Current Progress:**
+
+- DS3231 RTC module integrated
+- I2C communication established
+- RTC successfully returning real date and time
+- Replacing virtual millis()-based clock system
+- Date synchronization implemented
+- RTC debugging and display integration in progress
+
+**Goals:**
+
+- Real-time clock display
+- Automatic date management
+- Persistent timekeeping during power loss
+- Removal of dependency on software time counting
+- Foundation for attendance and scheduling features
+
+**Status:** Active Development
+
 
 
 
@@ -286,6 +309,20 @@ The issue was diagnosed as a disconnected ground wire and resolved through circu
 - Wiring verification
 
 ---
+### 6. RTC Integration Display Failure
+
+**Problem:**
+After integrating the DS3231 RTC module, the Serial Monitor successfully displayed the correct time, confirming that I2C communication and RTC functionality were working. However, the LCD failed to display the clock despite receiving valid time data.
+
+**Solution:**
+The issue was isolated through systematic testing. A standalone LCD test program confirmed that the display hardware and wiring were functioning correctly. This narrowed the problem to the firmware architecture rather than the RTC hardware itself. Additional debugging focused on screen state management, LCD update logic, and display refresh behavior during RTC integration.
+
+**Skills Demonstrated:**
+- Embedded system debugging
+- Hardware/software isolation testing
+- I2C troubleshooting
+- LCD diagnostics
+- Root cause analysis
 
 ## Hardware Used
 
