@@ -26,7 +26,7 @@ DormMate aims to reduce these problems through intelligent reminders, scheduling
 
 ### Core Features
 
-- Virtual Clock System
+- RTC Clock System
 - Automatic Night Light (Photoresistor-Based)
 - Alarm System
 - Reminder System
@@ -206,7 +206,7 @@ DormMate aims to reduce these problems through intelligent reminders, scheduling
 ### V14 — RTC Integration (In Development)
 
 **Started:** June 5 2026
-
+**Finished** June 6 2026
 **Current Progress:**
 
 - DS3231 RTC module integrated
