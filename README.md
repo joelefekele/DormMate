@@ -309,20 +309,23 @@ The issue was diagnosed as a disconnected ground wire and resolved through circu
 - Wiring verification
 
 ---
-### 6. RTC Integration Display Failure
+### 6. RTC Integration and Time Synchronization
 
 **Problem:**
-After integrating the DS3231 RTC module, the Serial Monitor successfully displayed the correct time, confirming that I2C communication and RTC functionality were working. However, the LCD failed to display the clock despite receiving valid time data.
+During the migration from a software-based clock (`millis()`) to a DS3231 Real Time Clock (RTC), several issues were encountered. Initially, the RTC communication was unreliable due to wiring and I²C connection problems. After communication was established, the program failed to compile because alarm, reminder, and scheduling subsystems depended on time variables (`H`, `M`, `S`) that were previously generated inside the clock display function. Finally, the RTC displayed incorrect time values because the module had not been synchronized and was operating without a backup battery.
 
 **Solution:**
-The issue was isolated through systematic testing. A standalone LCD test program confirmed that the display hardware and wiring were functioning correctly. This narrowed the problem to the firmware architecture rather than the RTC hardware itself. Additional debugging focused on screen state management, LCD update logic, and display refresh behavior during RTC integration.
+The RTC was rewired using the Arduino's dedicated SDA and SCL connections, which resolved communication issues. Global time variables (`H`, `M`, `S`) were introduced along with a centralized `RTC_Time()` function that continuously reads time data from the DS3231 and updates all system modules. The RTC was then synchronized with the computer's current time using a standalone test program, allowing the module to maintain accurate timekeeping during operation.
 
 **Skills Demonstrated:**
-- Embedded system debugging
-- Hardware/software isolation testing
-- I2C troubleshooting
-- LCD diagnostics
-- Root cause analysis
+
+* I²C communication debugging
+* Embedded firmware integration
+* Hardware/software troubleshooting
+* Real-time system design
+* Root cause analysis
+* RTC configuration and synchronization
+
 
 ## Hardware Used
 
